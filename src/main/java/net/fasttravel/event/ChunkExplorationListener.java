@@ -19,8 +19,9 @@ public class ChunkExplorationListener {
 
         for (int dx = -radius; dx <= radius; dx++) {
             for (int dz = -radius; dz <= radius; dz++) {
-                ChunkPos chunk = new ChunkPos(newChunk.x + dx, newChunk.z + dz);
+                if (dx * dx + dz * dz > radius * radius) continue;
 
+                ChunkPos chunk = new ChunkPos(newChunk.x + dx, newChunk.z + dz);
                 explorationState.addChunk(player.getUuid(), chunk);
 
                 if (!regionMapState.isChunkProcessed(chunk)) {
