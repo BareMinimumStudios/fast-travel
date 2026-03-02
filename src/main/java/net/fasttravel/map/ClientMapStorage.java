@@ -19,6 +19,8 @@ import java.util.*;
 @Environment(EnvType.CLIENT)
 public class ClientMapStorage {
 
+    private Set<Long> exploredChunks = new HashSet<>();
+
     public record TeleporterInfo(BlockPos pos, Text name, ItemStack icon) {
     }
 
@@ -88,6 +90,7 @@ public class ClientMapStorage {
         }
 
         texture.upload();
+        exploredChunks.add(chunkPos.toLong());
     }
 
     public Identifier getRegionTexture(int regionX, int regionZ) {
@@ -113,6 +116,22 @@ public class ClientMapStorage {
 
     public static int regionZ(long key) {
         return (int) (key >>> 32);
+    }
+
+    public void setExploredChunks(Set<Long> chunks) {
+        this.exploredChunks = new HashSet<>(chunks);
+    }
+
+    public void addExploredChunk(ChunkPos chunk) {
+        exploredChunks.add(chunk.toLong());
+    }
+
+    public boolean isExplored(ChunkPos chunk) {
+        return exploredChunks.contains(chunk.toLong());
+    }
+
+    public Set<Long> getExploredChunks() {
+        return Collections.unmodifiableSet(exploredChunks);
     }
 
     private static int argbToAbgr(int argb) {

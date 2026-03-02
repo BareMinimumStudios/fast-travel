@@ -62,12 +62,18 @@ public class FastTravelClientPacket {
             for (int i = 0; i < visitedCount; i++) {
                 visited.add(buf.readBlockPos());
             }
+            int exploredCount = buf.readInt();
+            Set<Long> exploredChunks = new HashSet<>(exploredCount);
+            for (int i = 0; i < exploredCount; i++) {
+                exploredChunks.add(buf.readLong());
+            }
 
             client.execute(() -> {
                 if (client.player == null || client.world == null) return;
                 ClientMapStorage storage = ClientMapStorage.get(client.world.getRegistryKey());
                 storage.setTeleporters(teleporters);
                 storage.setVisitedTeleporters(visited);
+                storage.setExploredChunks(exploredChunks);
                 client.setScreen(new TeleporterScreen(openedAt));
             });
         });

@@ -45,6 +45,11 @@ public class FastTravelConfig {
     @IntField
     public int chunkExplorationRadius = 6;
 
+    @SerialEntry(comment = "render fog overlay on map")
+    @AutoGen(category = "main")
+    @IntField
+    public boolean mapFogOverlay = true;
+
     public static void load() {
         CONFIG.load();
     }

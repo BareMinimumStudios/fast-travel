@@ -6,6 +6,7 @@ import net.fasttravel.FastTravelMain;
 import net.fasttravel.accessor.PlayerEntityAccess;
 import net.fasttravel.config.FastTravelConfig;
 import net.fasttravel.init.ItemInit;
+import net.fasttravel.state.PlayerExplorationState;
 import net.fasttravel.state.TeleporterState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -18,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
 import java.util.List;
+import java.util.Set;
 
 public class FastTravelServerPacket {
 
@@ -97,6 +99,11 @@ public class FastTravelServerPacket {
             buf.writeBlockPos(pos);
         }
 
+        Set<Long> exploredChunks = PlayerExplorationState.get(world).getExploredChunks(player.getUuid());
+        buf.writeInt(exploredChunks.size());
+        for (long chunkLong : exploredChunks) {
+            buf.writeLong(chunkLong);
+        }
         player.networkHandler.sendPacket(new CustomPayloadS2CPacket(TELEPORTER_SCREEN_PACKET, buf));
     }
 

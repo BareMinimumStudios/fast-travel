@@ -1,13 +1,16 @@
 package net.fasttravel.block.screen;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fasttravel.FastTravelMain;
+import net.fasttravel.config.FastTravelConfig;
 import net.fasttravel.map.ClientMapStorage;
 import net.fasttravel.network.FastTravelClientPacket;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.render.*;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
@@ -15,9 +18,11 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.world.border.WorldBorder;
 import org.apache.commons.lang3.text.WordUtils;
+import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -82,26 +87,21 @@ public class TeleporterScreen extends Screen {
         for (Map.Entry<Long, Identifier> entry : mapStorage.regionTextures.entrySet()) {
             long key = entry.getKey();
             Identifier texture = entry.getValue();
-
             int regionWorldX = ClientMapStorage.regionX(key) * 512;
             int regionWorldZ = ClientMapStorage.regionZ(key) * 512;
-
             int u = Math.max(0, renderX1 - regionWorldX);
             int v = Math.max(0, renderZ1 - regionWorldZ);
             int drawWidth = Math.min(512, renderX2 - regionWorldX) - u;
             int drawHeight = Math.min(512, renderZ2 - regionWorldZ) - v;
             if (drawWidth <= 0 || drawHeight <= 0) continue;
-
             context.getMatrices().push();
-            context.getMatrices().translate(
-                    worldXToRenderX(regionWorldX + u),
-                    worldZToRenderY(regionWorldZ + v),
-                    0
-            );
+            context.getMatrices().translate(worldXToRenderX(regionWorldX + u), worldZToRenderY(regionWorldZ + v), 0);
             context.drawTexture(texture, 0, 0, drawWidth, drawHeight, u, v, drawWidth, drawHeight, 512, 512);
             context.getMatrices().pop();
         }
-
+        if (FastTravelConfig.CONFIG.instance().mapFogOverlay) {
+            renderFogOverlay(context, mapStorage, scaleFactor);
+        }
         context.getMatrices().pop();
 
         hoveredTeleporter = null;
@@ -281,6 +281,87 @@ public class TeleporterScreen extends Screen {
         centreX -= deltaX / getScaleFactor();
         centreZ -= deltaY / getScaleFactor();
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+    }
+
+    private void renderFogOverlay(DrawContext context, ClientMapStorage mapStorage, float scaleFactor) {
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
+        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+        Matrix4f matrix = context.getMatrices().peek().getPositionMatrix();
+
+        int viewChunkX1 = (int) Math.floor(screenXToWorldX(0)) >> 4;
+        int viewChunkX2 = (int) Math.ceil(screenXToWorldX(width)) >> 4;
+        int viewChunkZ1 = (int) Math.floor(screenYToWorldZ(0)) >> 4;
+        int viewChunkZ2 = (int) Math.ceil(screenYToWorldZ(height)) >> 4;
+
+        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+
+        for (int cx = viewChunkX1; cx <= viewChunkX2; cx++) {
+            for (int cz = viewChunkZ1; cz <= viewChunkZ2; cz++) {
+                ChunkPos chunk = new ChunkPos(cx, cz);
+                if (mapStorage.isExplored(chunk)) continue;
+
+                float x1 = (float) worldXToRenderX(chunk.getStartX());
+                float z1 = (float) worldZToRenderY(chunk.getStartZ());
+                float x2 = (float) worldXToRenderX(chunk.getStartX() + 16);
+                float z2 = (float) worldZToRenderY(chunk.getStartZ() + 16);
+
+                buffer.vertex(matrix, x1, z1, 0).color(0, 0, 0, 200).next();
+                buffer.vertex(matrix, x1, z2, 0).color(0, 0, 0, 200).next();
+                buffer.vertex(matrix, x2, z2, 0).color(0, 0, 0, 200).next();
+                buffer.vertex(matrix, x2, z1, 0).color(0, 0, 0, 200).next();
+            }
+        }
+
+        BufferRenderer.drawWithGlobalProgram(buffer.end());
+
+        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+
+        for (int cx = viewChunkX1; cx <= viewChunkX2; cx++) {
+            for (int cz = viewChunkZ1; cz <= viewChunkZ2; cz++) {
+                ChunkPos chunk = new ChunkPos(cx, cz);
+                if (!mapStorage.isExplored(chunk)) continue;
+
+                float x1 = (float) worldXToRenderX(chunk.getStartX());
+                float z1 = (float) worldZToRenderY(chunk.getStartZ());
+                float x2 = (float) worldXToRenderX(chunk.getStartX() + 16);
+                float z2 = (float) worldZToRenderY(chunk.getStartZ() + 16);
+
+                int fadeAlpha = 160;
+                int fadeSize = Math.max(1, (int) (3 / scaleFactor));
+
+                if (!mapStorage.isExplored(new ChunkPos(cx, cz - 1))) {
+                    buffer.vertex(matrix, x1, z1, 0).color(0, 0, 0, fadeAlpha).next();
+                    buffer.vertex(matrix, x1, z1 + fadeSize, 0).color(0, 0, 0, 0).next();
+                    buffer.vertex(matrix, x2, z1 + fadeSize, 0).color(0, 0, 0, 0).next();
+                    buffer.vertex(matrix, x2, z1, 0).color(0, 0, 0, fadeAlpha).next();
+                }
+                if (!mapStorage.isExplored(new ChunkPos(cx, cz + 1))) {
+                    buffer.vertex(matrix, x1, z2 - fadeSize, 0).color(0, 0, 0, 0).next();
+                    buffer.vertex(matrix, x1, z2, 0).color(0, 0, 0, fadeAlpha).next();
+                    buffer.vertex(matrix, x2, z2, 0).color(0, 0, 0, fadeAlpha).next();
+                    buffer.vertex(matrix, x2, z2 - fadeSize, 0).color(0, 0, 0, 0).next();
+                }
+                if (!mapStorage.isExplored(new ChunkPos(cx - 1, cz))) {
+                    buffer.vertex(matrix, x1, z1, 0).color(0, 0, 0, fadeAlpha).next();
+                    buffer.vertex(matrix, x1, z2, 0).color(0, 0, 0, fadeAlpha).next();
+                    buffer.vertex(matrix, x1 + fadeSize, z2, 0).color(0, 0, 0, 0).next();
+                    buffer.vertex(matrix, x1 + fadeSize, z1, 0).color(0, 0, 0, 0).next();
+                }
+                if (!mapStorage.isExplored(new ChunkPos(cx + 1, cz))) {
+                    buffer.vertex(matrix, x2 - fadeSize, z1, 0).color(0, 0, 0, 0).next();
+                    buffer.vertex(matrix, x2 - fadeSize, z2, 0).color(0, 0, 0, 0).next();
+                    buffer.vertex(matrix, x2, z2, 0).color(0, 0, 0, fadeAlpha).next();
+                    buffer.vertex(matrix, x2, z1, 0).color(0, 0, 0, fadeAlpha).next();
+                }
+            }
+        }
+
+        BufferRenderer.drawWithGlobalProgram(buffer.end());
+        RenderSystem.disableBlend();
     }
 
     private double worldXToRenderX(double worldX) {

@@ -4,6 +4,7 @@
   "yacl3.config.fasttravel:fasttravel.afterTeleportTime": "After Teleport Time",
   "yacl3.config.fasttravel:fasttravel.teleportCooldown": "Teleport Cooldown",
   "yacl3.config.fasttravel:fasttravel.chunkExplorationRadius": "Chunk Exploration Radius",
+  "yacl3.config.fasttravel:fasttravel.mapFogOverlay": "Map Fog Overlay",
 
   "screen.fasttravel.map": "Map",
   "op_screen.fasttravel.teleporter_name": "Teleporter Name",
