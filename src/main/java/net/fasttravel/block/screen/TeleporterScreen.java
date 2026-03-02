@@ -33,6 +33,7 @@ import java.util.Map;
 public class TeleporterScreen extends Screen {
 
     private static final Identifier PLAYER_TEXTURE = FastTravelMain.identifierOf("textures/gui/map/player.png");
+    private static final Identifier CLOUD_TEXTURE = FastTravelMain.identifierOf("textures/gui/map/cloud.png");
 
     private double centreX = 0;
     private double centreZ = 0;
@@ -283,6 +284,121 @@ public class TeleporterScreen extends Screen {
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
+    // clouds test #1
+//    private void renderFogOverlay(DrawContext context, ClientMapStorage mapStorage, float scaleFactor) {
+//        RenderSystem.enableBlend();
+//        RenderSystem.defaultBlendFunc();
+//
+//        int viewChunkX1 = (int) Math.floor(screenXToWorldX(0)) >> 4;
+//        int viewChunkX2 = (int) Math.ceil(screenXToWorldX(width)) >> 4;
+//        int viewChunkZ1 = (int) Math.floor(screenYToWorldZ(0)) >> 4;
+//        int viewChunkZ2 = (int) Math.ceil(screenYToWorldZ(height)) >> 4;
+//
+//        Tessellator tessellator = Tessellator.getInstance();
+//        BufferBuilder buffer = tessellator.getBuffer();
+//        Matrix4f matrix = context.getMatrices().peek().getPositionMatrix();
+//
+//        RenderSystem.setShaderTexture(0, CLOUD_TEXTURE);
+//        RenderSystem.setShader(GameRenderer::getPositionColorTexProgram);
+//
+//        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
+//
+//        for (int cx = viewChunkX1; cx <= viewChunkX2; cx++) {
+//            for (int cz = viewChunkZ1; cz <= viewChunkZ2; cz++) {
+//                if (mapStorage.isExplored(new ChunkPos(cx, cz))) continue;
+//
+//                float x1 = (float) worldXToRenderX(cx * 16);
+//                float z1 = (float) worldZToRenderY(cz * 16);
+//                float x2 = (float) worldXToRenderX(cx * 16 + 16);
+//                float z2 = (float) worldZToRenderY(cz * 16 + 16);
+//
+//                float uvOffsetX = (float) Math.floorMod(cx * 16, 52) / 64;
+//                float uvOffsetZ = (float) Math.floorMod(cz * 16, 27) / 64;
+//
+//                float uvSizeX = 16f / 64;
+//                float uvSizeZ = 16f / 64;
+//
+//                float u1 = uvOffsetX;
+//                float v1 = uvOffsetZ;
+//                float u2 = uvOffsetX + uvSizeX;
+//                float v2 = uvOffsetZ + uvSizeZ;
+//
+//                buffer.vertex(matrix, x1, z1, 0).color(1f, 1f, 1f, 0.85f).texture(u1, v1).next();
+//                buffer.vertex(matrix, x1, z2, 0).color(1f, 1f, 1f, 0.85f).texture(u1, v2).next();
+//                buffer.vertex(matrix, x2, z2, 0).color(1f, 1f, 1f, 0.85f).texture(u2, v2).next();
+//                buffer.vertex(matrix, x2, z1, 0).color(1f, 1f, 1f, 0.85f).texture(u2, v1).next();
+//            }
+//        }
+//
+//        BufferRenderer.drawWithGlobalProgram(buffer.end());
+//
+//        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+//        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+//
+//        for (int cx = viewChunkX1; cx <= viewChunkX2; cx++) {
+//            for (int cz = viewChunkZ1; cz <= viewChunkZ2; cz++) {
+//                if (mapStorage.isExplored(new ChunkPos(cx, cz))) continue;
+//
+//                float x1 = (float) worldXToRenderX(cx * 16);
+//                float z1 = (float) worldZToRenderY(cz * 16);
+//                float x2 = (float) worldXToRenderX(cx * 16 + 16);
+//                float z2 = (float) worldZToRenderY(cz * 16 + 16);
+//
+//                buffer.vertex(matrix, x1, z1, 0).color(0, 0, 0, 120).next();
+//                buffer.vertex(matrix, x1, z2, 0).color(0, 0, 0, 120).next();
+//                buffer.vertex(matrix, x2, z2, 0).color(0, 0, 0, 120).next();
+//                buffer.vertex(matrix, x2, z1, 0).color(0, 0, 0, 120).next();
+//            }
+//        }
+//
+//        BufferRenderer.drawWithGlobalProgram(buffer.end());
+//
+//        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+//
+//        int fadeSize = Math.max(2, (int) (4 / scaleFactor));
+//
+//        for (int cx = viewChunkX1; cx <= viewChunkX2; cx++) {
+//            for (int cz = viewChunkZ1; cz <= viewChunkZ2; cz++) {
+//                if (!mapStorage.isExplored(new ChunkPos(cx, cz))) continue;
+//
+//                float x1 = (float) worldXToRenderX(cx * 16);
+//                float z1 = (float) worldZToRenderY(cz * 16);
+//                float x2 = (float) worldXToRenderX(cx * 16 + 16);
+//                float z2 = (float) worldZToRenderY(cz * 16 + 16);
+//
+//                int alpha = 180;
+//
+//                if (!mapStorage.isExplored(new ChunkPos(cx, cz - 1))) {
+//                    buffer.vertex(matrix, x1, z1, 0).color(0, 0, 0, alpha).next();
+//                    buffer.vertex(matrix, x1, z1 + fadeSize, 0).color(0, 0, 0, 0).next();
+//                    buffer.vertex(matrix, x2, z1 + fadeSize, 0).color(0, 0, 0, 0).next();
+//                    buffer.vertex(matrix, x2, z1, 0).color(0, 0, 0, alpha).next();
+//                }
+//                if (!mapStorage.isExplored(new ChunkPos(cx, cz + 1))) {
+//                    buffer.vertex(matrix, x1, z2 - fadeSize, 0).color(0, 0, 0, 0).next();
+//                    buffer.vertex(matrix, x1, z2, 0).color(0, 0, 0, alpha).next();
+//                    buffer.vertex(matrix, x2, z2, 0).color(0, 0, 0, alpha).next();
+//                    buffer.vertex(matrix, x2, z2 - fadeSize, 0).color(0, 0, 0, 0).next();
+//                }
+//                if (!mapStorage.isExplored(new ChunkPos(cx - 1, cz))) {
+//                    buffer.vertex(matrix, x1, z1, 0).color(0, 0, 0, alpha).next();
+//                    buffer.vertex(matrix, x1, z2, 0).color(0, 0, 0, alpha).next();
+//                    buffer.vertex(matrix, x1 + fadeSize, z2, 0).color(0, 0, 0, 0).next();
+//                    buffer.vertex(matrix, x1 + fadeSize, z1, 0).color(0, 0, 0, 0).next();
+//                }
+//                if (!mapStorage.isExplored(new ChunkPos(cx + 1, cz))) {
+//                    buffer.vertex(matrix, x2 - fadeSize, z1, 0).color(0, 0, 0, 0).next();
+//                    buffer.vertex(matrix, x2 - fadeSize, z2, 0).color(0, 0, 0, 0).next();
+//                    buffer.vertex(matrix, x2, z2, 0).color(0, 0, 0, alpha).next();
+//                    buffer.vertex(matrix, x2, z1, 0).color(0, 0, 0, alpha).next();
+//                }
+//            }
+//        }
+//
+//        BufferRenderer.drawWithGlobalProgram(buffer.end());
+//        RenderSystem.disableBlend();
+//    }
+
     private void renderFogOverlay(DrawContext context, ClientMapStorage mapStorage, float scaleFactor) {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -363,6 +479,70 @@ public class TeleporterScreen extends Screen {
         BufferRenderer.drawWithGlobalProgram(buffer.end());
         RenderSystem.disableBlend();
     }
+
+    // other cloud test
+//    private void renderFogOverlay(DrawContext context, ClientMapStorage mapStorage, float scaleFactor) {
+//        RenderSystem.enableBlend();
+//        RenderSystem.defaultBlendFunc();
+//        RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
+//        RenderSystem.setShaderTexture(0, CLOUD_TEXTURE);
+//
+//        Tessellator tessellator = Tessellator.getInstance();
+//        BufferBuilder buffer = tessellator.getBuffer();
+//        Matrix4f matrix = context.getMatrices().peek().getPositionMatrix();
+//
+//        int startX = (int) Math.floor(screenXToWorldX(0));
+//        int endX = (int) Math.ceil(screenXToWorldX(width));
+//        int startZ = (int) Math.floor(screenYToWorldZ(0));
+//        int endZ = (int) Math.ceil(screenYToWorldZ(height));
+//
+////        int cloudW = 20;
+////        int cloudH = 20;
+//
+//        float cloudW = 52f;
+//        float cloudH = 27f;
+//
+//        float stepX = cloudW * 0.6f;
+//        float stepZ = cloudH * 0.5f;
+//
+//        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
+//
+//        for (float x = startX - cloudW; x <= endX + cloudW; x += stepX) {
+//            for (float z = startZ - cloudH; z <= endZ + cloudH; z += stepZ) {
+//
+//                // 1. Pseudo-Zufall basierend auf Position, damit es nicht "tanzt"
+//                // Wir nutzen den Modulo-Wert der Koordinaten für einen festen Versatz
+//                float seed = (float) (Math.sin(x * 0.123 + z * 0.456) * 10.0);
+//                float offsetX = (float) (Math.cos(z * 0.2) * 8.0); // Verschiebung auf X-Achse
+//                float offsetZ = seed;                             // Verschiebung auf Z-Achse
+//
+//                // 2. Staggering (Jede zweite Reihe versetzen)
+//                float stagger = ((int)(z / stepZ) % 2 == 0) ? (stepX / 2f) : 0f;
+//
+//                float finalX = x + offsetX + stagger;
+//                float finalZ = z + offsetZ;
+//
+//                // Check: Ist der Kernbereich dieser Wolke erkundet?
+//                if (mapStorage.isExplored(new ChunkPos((int)finalX >> 4, (int)finalZ >> 4))) {
+//                    continue;
+//                }
+//
+//                float rx1 = (float) worldXToRenderX(finalX);
+//                float rz1 = (float) worldZToRenderY(finalZ);
+//                float rx2 = (float) worldXToRenderX(finalX + cloudW);
+//                float rz2 = (float) worldZToRenderY(finalZ + cloudH);
+//
+//                int a = 230; // Etwas deckender für weniger Lücken
+//                buffer.vertex(matrix, rx1, rz1, 0).texture(0, 0).color(255, 255, 255, a).next();
+//                buffer.vertex(matrix, rx1, rz2, 0).texture(0, 1).color(255, 255, 255, a).next();
+//                buffer.vertex(matrix, rx2, rz2, 0).texture(1, 1).color(255, 255, 255, a).next();
+//                buffer.vertex(matrix, rx2, rz1, 0).texture(1, 0).color(255, 255, 255, a).next();
+//            }
+//        }
+//
+//        BufferRenderer.drawWithGlobalProgram(buffer.end());
+//        RenderSystem.disableBlend();
+//    }
 
     private double worldXToRenderX(double worldX) {
         return (getWidth() / 2.0) + worldX - centreX;
