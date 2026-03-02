@@ -1,0 +1,17 @@
+{
+  "teleporting": {
+    "sounds": [
+      "fasttravel:teleporting"
+    ]
+  },
+  "after_teleporting": {
+    "sounds": [
+      "fasttravel:after_teleporting"
+    ]
+  },
+  "discovery": {
+    "sounds": [
+      "fasttravel:discovery"
+    ]
+  }
+}

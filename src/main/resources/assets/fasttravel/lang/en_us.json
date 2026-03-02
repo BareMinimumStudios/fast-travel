@@ -1,0 +1,23 @@
+{
+  "yacl3.config.fasttravel:fasttravel.category.main": "FastTravel",
+  "yacl3.config.fasttravel:fasttravel.teleportTime": "Teleport Time",
+  "yacl3.config.fasttravel:fasttravel.afterTeleportTime": "After Teleport Time",
+  "yacl3.config.fasttravel:fasttravel.teleportCooldown": "Teleport Cooldown",
+  "yacl3.config.fasttravel:fasttravel.chunkExplorationRadius": "Chunk Exploration Radius",
+
+  "screen.fasttravel.map": "Map",
+  "op_screen.fasttravel.teleporter_name": "Teleporter Name",
+  "op_screen.fasttravel.item_icon": "Item Icon",
+
+  "block.fasttravel.teleporter": "Teleporter",
+
+  "item.fasttravel.item_group": "FastTravel",
+  "item.fasttravel.divinity_shrapnel": "Divinity Shrapnel",
+  "item.fasttravel.divinity_shrapnel.tooltip.1": "Utilizes the power of \"Flux\"\nto travel great distances.",
+  "item.fasttravel.divinity_shrapnel.tooltip.2": "Flux is weaved within us all...\nIt is present everywhere where there is life.",
+
+  "info.fasttravel.teleport": "Are you sure you want to teleport to this location?",
+  "info.fasttravel.unvisited": "You have not visited this gate yet.",
+  "info.fasttravel.cooldown": "Your Divinity Shrapnel is on cooldown.",
+  "info.fasttravel.missing_shrapnel": "A Divinity Shrapnel is required!"
+}

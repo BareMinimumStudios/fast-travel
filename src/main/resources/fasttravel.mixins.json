@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "net.fasttravel.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "PlayerEntityMixin",
+    "ServerPlayNetworkHandlerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "client.BipedEntityModelMixin",
+    "client.LivingEntityRendererMixin"
+  ]
+}
