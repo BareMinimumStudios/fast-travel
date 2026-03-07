@@ -19,6 +19,8 @@ public class DivinityShrapnelItem extends Item {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         tooltip.add(Text.translatable("item.fasttravel.divinity_shrapnel.tooltip.1"));
         tooltip.add(Text.translatable("item.fasttravel.divinity_shrapnel.tooltip.2"));
+        tooltip.add(Text.translatable("item.fasttravel.divinity_shrapnel.tooltip.3"));
+        tooltip.add(Text.translatable("item.fasttravel.divinity_shrapnel.tooltip.4"));
 
         super.appendTooltip(stack, world, tooltip, context);
     }
