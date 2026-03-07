@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fasttravel.FastTravelMain;
 import net.fasttravel.block.MonolithBlock;
+import net.fasttravel.block.MonolithTopBlock;
 import net.fasttravel.block.entity.MonolithEntity;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -17,18 +18,20 @@ import net.minecraft.util.Identifier;
 
 public class BlockInit {
 
-    public static final Block MONOLITH = register("monolith", new MonolithBlock(AbstractBlock.Settings.copy(Blocks.STONE)));
+    public static final Block MONOLITH = register("monolith", true, new MonolithBlock(AbstractBlock.Settings.copy(Blocks.BEDROCK)));
+    public static final Block MONOLITH_TOP = register("monolith_top", false, new MonolithTopBlock(AbstractBlock.Settings.copy(Blocks.BEDROCK).dropsNothing()));
 
     public static BlockEntityType<MonolithEntity> MONOLITH_ENTITY;
 
-    private static Block register(String id, Block block) {
-        return register(FastTravelMain.identifierOf(id), block);
+    private static Block register(String id, boolean registerItem, Block block) {
+        return register(FastTravelMain.identifierOf(id), registerItem, block);
     }
 
-    private static Block register(Identifier id, Block block) {
-        Item item = Registry.register(Registries.ITEM, id, new BlockItem(block, new Item.Settings()));
-        ItemGroupEvents.modifyEntriesEvent(ItemInit.FASTTRAVEL_ITEM_GROUP).register(entries -> entries.add(item));
-
+    private static Block register(Identifier id, boolean registerItem, Block block) {
+        if (registerItem) {
+            Item item = Registry.register(Registries.ITEM, id, new BlockItem(block, new Item.Settings()));
+            ItemGroupEvents.modifyEntriesEvent(ItemInit.FASTTRAVEL_ITEM_GROUP).register(entries -> entries.add(item));
+        }
         return Registry.register(Registries.BLOCK, id, block);
     }
 

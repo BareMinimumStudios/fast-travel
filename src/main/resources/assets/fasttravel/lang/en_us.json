@@ -14,8 +14,10 @@
 
   "item.fasttravel.item_group": "FastTravel",
   "item.fasttravel.divinity_shrapnel": "Divinity Shrapnel",
-  "item.fasttravel.divinity_shrapnel.tooltip.1": "Utilizes the power of \"Flux\"\nto travel great distances.",
-  "item.fasttravel.divinity_shrapnel.tooltip.2": "Flux is weaved within us all...\nIt is present everywhere where there is life.",
+  "item.fasttravel.divinity_shrapnel.tooltip.1": "Utilizes the power of \"Flux\"",
+  "item.fasttravel.divinity_shrapnel.tooltip.2": "to travel great distances.",
+  "item.fasttravel.divinity_shrapnel.tooltip.3": "Flux is weaved within us all...",
+  "item.fasttravel.divinity_shrapnel.tooltip.4": "It is present everywhere where there is life.",
 
   "info.fasttravel.teleport": "Are you sure you want to teleport to this location?",
   "info.fasttravel.unvisited": "You have not visited this gate yet.",

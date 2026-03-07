@@ -1,6 +1,7 @@
 package net.fasttravel.block;
 
 import net.fasttravel.block.entity.MonolithEntity;
+import net.fasttravel.init.BlockInit;
 import net.fasttravel.init.SoundInit;
 import net.fasttravel.network.FastTravelServerPacket;
 import net.fasttravel.state.TeleporterState;
@@ -9,10 +10,12 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -56,7 +59,11 @@ public class MonolithBlock extends BlockWithEntity {
     @Override
     @Nullable
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
+        BlockPos pos = ctx.getBlockPos();
+        if (ctx.getWorld().getBlockState(pos.up()).canReplace(ctx)) {
+            return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
+        }
+        return null;
     }
 
     @Override
@@ -88,18 +95,30 @@ public class MonolithBlock extends BlockWithEntity {
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
         if (!world.isClient() && world instanceof ServerWorld serverWorld) {
             TeleporterState teleporterState = TeleporterState.get(serverWorld);
-            teleporterState.addTeleporter(pos, Text.literal("Teleporter"), Items.ENDER_PEARL.getDefaultStack());
+            teleporterState.addTeleporter(pos, Text.translatable("block.fasttravel.monolith"), Items.ENDER_PEARL.getDefaultStack());
         }
         super.onBlockAdded(state, world, pos, oldState, notify);
     }
 
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.isOf(newState.getBlock())) return;
+        if (state.isOf(newState.getBlock())) {
+            return;
+        }
+        if (!world.isClient() && world.getBlockState(pos.up()).isOf(BlockInit.MONOLITH_TOP)) {
+            world.removeBlock(pos.up(), false);
+        }
         if (!world.isClient() && world instanceof ServerWorld serverWorld) {
             TeleporterState.get(serverWorld).removeTeleporter(pos);
         }
         super.onStateReplaced(state, world, pos, newState, moved);
+    }
+
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        if (!world.isClient()) {
+            world.setBlockState(pos.up(), BlockInit.MONOLITH_TOP.getDefaultState().with(MonolithTopBlock.FACING, state.get(FACING)), Block.NOTIFY_ALL);
+        }
     }
 
 }
