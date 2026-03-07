@@ -5,9 +5,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 
-public class TeleporterEntity extends BlockEntity {
+public class MonolithEntity extends BlockEntity {
 
-    public TeleporterEntity(BlockPos pos, BlockState state) {
-        super(BlockInit.TELEPORTER_ENTITY, pos, state);
+    public MonolithEntity(BlockPos pos, BlockState state) {
+        super(BlockInit.MONOLITH_ENTITY, pos, state);
     }
 }

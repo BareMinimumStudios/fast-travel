@@ -17,9 +17,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 @Environment(EnvType.CLIENT)
-public class TeleporterOpScreen extends Screen {
+public class MonolithOpScreen extends Screen {
 
-    private static final Text TELEPORTER_NAME_TEXT = Text.translatable("op_screen.fasttravel.teleporter_name");
+    private static final Text MONOLITH_NAME_TEXT = Text.translatable("op_screen.fasttravel.monolith_name");
     private static final Text ITEM_ICON_TEXT = Text.translatable("op_screen.fasttravel.item_icon");
 
     private final BlockPos teleporterPos;
@@ -30,7 +30,7 @@ public class TeleporterOpScreen extends Screen {
     private TextFieldWidget teleporterNameWidget;
     private TextFieldWidget teleporterItemStackWidget;
 
-    public TeleporterOpScreen(BlockPos teleporterPos, Text name, ItemStack itemStack) {
+    public MonolithOpScreen(BlockPos teleporterPos, Text name, ItemStack itemStack) {
         super(NarratorManager.EMPTY);
         this.teleporterPos = teleporterPos;
         this.name = name;
@@ -39,7 +39,7 @@ public class TeleporterOpScreen extends Screen {
 
     @Override
     protected void init() {
-        this.teleporterNameWidget = new TextFieldWidget(this.textRenderer, this.width / 2 - 152, 50, 300, 20, TELEPORTER_NAME_TEXT);
+        this.teleporterNameWidget = new TextFieldWidget(this.textRenderer, this.width / 2 - 152, 50, 300, 20, MONOLITH_NAME_TEXT);
         this.teleporterNameWidget.setMaxLength(128);
         this.teleporterNameWidget.setText(this.name.getString());
         this.teleporterNameWidget.setChangedListener(pool -> this.updateDoneButtonState());
@@ -77,7 +77,7 @@ public class TeleporterOpScreen extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         this.renderBackground(context);
-        context.drawTextWithShadow(this.textRenderer, TELEPORTER_NAME_TEXT, this.width / 2 - 153, 40, 0xA0A0A0);
+        context.drawTextWithShadow(this.textRenderer, MONOLITH_NAME_TEXT, this.width / 2 - 153, 40, 0xA0A0A0);
         this.teleporterNameWidget.render(context, mouseX, mouseY, delta);
         context.drawTextWithShadow(this.textRenderer, ITEM_ICON_TEXT, this.width / 2 - 153, 75, 0xA0A0A0);
         this.teleporterItemStackWidget.render(context, mouseX, mouseY, delta);

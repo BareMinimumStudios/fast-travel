@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=south": {
+      "model": "fasttravel:block/monolith"
+    },
+    "facing=west": {
+      "model": "fasttravel:block/monolith",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "fasttravel:block/monolith",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "fasttravel:block/monolith",
+      "y": 270
+    }
+  }
+}

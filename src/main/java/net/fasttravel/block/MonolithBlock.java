@@ -1,9 +1,10 @@
 package net.fasttravel.block;
 
-import net.fasttravel.block.entity.TeleporterEntity;
+import net.fasttravel.block.entity.MonolithEntity;
 import net.fasttravel.init.SoundInit;
 import net.fasttravel.network.FastTravelServerPacket;
 import net.fasttravel.state.TeleporterState;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -11,31 +12,51 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
-public class TeleporterBlock extends BlockWithEntity {
+public class MonolithBlock extends BlockWithEntity {
 
-    public TeleporterBlock(Settings settings) {
+    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+
+    public MonolithBlock(Settings settings) {
         super(settings);
+        this.setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH));
     }
 
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new TeleporterEntity(pos, state);
+        return new MonolithEntity(pos, state);
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
     }
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
+    }
+
+    @Override
+    @Nullable
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
     }
 
     @Override

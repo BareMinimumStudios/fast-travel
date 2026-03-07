@@ -5,8 +5,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fasttravel.accessor.PlayerEntityAccess;
-import net.fasttravel.block.screen.TeleporterOpScreen;
-import net.fasttravel.block.screen.TeleporterScreen;
+import net.fasttravel.block.screen.MonolithOpScreen;
+import net.fasttravel.block.screen.MonolithScreen;
 import net.fasttravel.init.SoundInit;
 import net.fasttravel.map.ClientMapStorage;
 import net.minecraft.client.MinecraftClient;
@@ -74,7 +74,7 @@ public class FastTravelClientPacket {
                 storage.setTeleporters(teleporters);
                 storage.setVisitedTeleporters(visited);
                 storage.setExploredChunks(exploredChunks);
-                client.setScreen(new TeleporterScreen(openedAt));
+                client.setScreen(new MonolithScreen(openedAt));
             });
         });
 
@@ -82,7 +82,7 @@ public class FastTravelClientPacket {
             BlockPos pos = buf.readBlockPos();
             Text name = buf.readText();
             ItemStack icon = buf.readItemStack();
-            client.execute(() -> client.setScreen(new TeleporterOpScreen(pos, name, icon)));
+            client.execute(() -> client.setScreen(new MonolithOpScreen(pos, name, icon)));
         });
 
         ClientPlayNetworking.registerGlobalReceiver(FastTravelServerPacket.MAP_CHUNK_PACKET, (client, handler, buf, sender) -> {

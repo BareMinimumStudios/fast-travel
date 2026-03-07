@@ -17,7 +17,7 @@ public class RenderInit {
     private static final Identifier TELEPORT_BARS_TEXTURE = FastTravelMain.identifierOf("textures/gui/teleport_bars.png");
 
     public static void init() {
-        BlockRenderLayerMap.INSTANCE.putBlock(BlockInit.TELEPORTER, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(BlockInit.MONOLITH, RenderLayer.getCutout());
 
         ParticleFactoryRegistry.getInstance().register(ParticleInit.TELEPORT_PARTICLE, ParticleInit.TeleportParticle.TeleportFactory::new);
         ParticleFactoryRegistry.getInstance().register(ParticleInit.AFTER_TELEPORT_PARTICLE, ParticleInit.TeleportParticle.AfterTeleportFactory::new);

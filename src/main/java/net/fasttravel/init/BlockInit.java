@@ -3,8 +3,8 @@ package net.fasttravel.init;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fasttravel.FastTravelMain;
-import net.fasttravel.block.TeleporterBlock;
-import net.fasttravel.block.entity.TeleporterEntity;
+import net.fasttravel.block.MonolithBlock;
+import net.fasttravel.block.entity.MonolithEntity;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -17,9 +17,9 @@ import net.minecraft.util.Identifier;
 
 public class BlockInit {
 
-    public static final Block TELEPORTER = register("teleporter", new TeleporterBlock(AbstractBlock.Settings.copy(Blocks.STONE)));
+    public static final Block MONOLITH = register("monolith", new MonolithBlock(AbstractBlock.Settings.copy(Blocks.STONE)));
 
-    public static BlockEntityType<TeleporterEntity> TELEPORTER_ENTITY;
+    public static BlockEntityType<MonolithEntity> MONOLITH_ENTITY;
 
     private static Block register(String id, Block block) {
         return register(FastTravelMain.identifierOf(id), block);
@@ -33,8 +33,8 @@ public class BlockInit {
     }
 
     public static void init() {
-        TELEPORTER_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, FastTravelMain.identifierOf("teleporter_entity"),
-                FabricBlockEntityTypeBuilder.create(TeleporterEntity::new, TELEPORTER).build(null));
+        MONOLITH_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, FastTravelMain.identifierOf("monolith_entity"),
+                FabricBlockEntityTypeBuilder.create(MonolithEntity::new, MONOLITH).build(null));
     }
 
 }

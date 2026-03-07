@@ -7,10 +7,10 @@
   "yacl3.config.fasttravel:fasttravel.mapFogOverlay": "Map Fog Overlay",
 
   "screen.fasttravel.map": "Map",
-  "op_screen.fasttravel.teleporter_name": "Teleporter Name",
+  "op_screen.fasttravel.monolith_name": "Monolith Name",
   "op_screen.fasttravel.item_icon": "Item Icon",
 
-  "block.fasttravel.teleporter": "Teleporter",
+  "block.fasttravel.monolith": "Monolith",
 
   "item.fasttravel.item_group": "FastTravel",
   "item.fasttravel.divinity_shrapnel": "Divinity Shrapnel",
