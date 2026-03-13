@@ -29,10 +29,14 @@ public class FastTravelClientPacket {
         ClientPlayNetworking.registerGlobalReceiver(FastTravelServerPacket.TELEPORT_PACKET, (client, handler, buf, sender) -> {
             int ticks = buf.readInt();
             client.execute(() -> {
-                if (client.player == null) return;
-                ((PlayerEntityAccess) client.player).startTeleporting(BlockPos.ORIGIN);
+                if (client.player == null) {
+                    return;
+                }
                 ((PlayerEntityAccess) client.player).setTeleportTick(ticks);
-                client.player.playSound(SoundInit.TELEPORTING, 1.0f, 1.0f);
+                if (ticks >= 0) {
+                    ((PlayerEntityAccess) client.player).startTeleporting(BlockPos.ORIGIN);
+                    client.player.playSound(SoundInit.TELEPORTING, 1.0f, 1.0f);
+                }
             });
         });
 
