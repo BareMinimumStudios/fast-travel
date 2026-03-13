@@ -50,6 +50,11 @@ public class FastTravelConfig {
     @IntField
     public boolean mapFogOverlay = true;
 
+    @SerialEntry(comment = "monolith player check radius")
+    @AutoGen(category = "main")
+    @IntField
+    public int monolithExploreRadius = 6;
+
     public static void load() {
         CONFIG.load();
     }

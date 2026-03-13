@@ -10,6 +10,8 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -46,6 +48,12 @@ public class MonolithBlock extends BlockWithEntity {
         return new MonolithEntity(pos, state);
     }
 
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return checkType(type, BlockInit.MONOLITH_ENTITY, world.isClient() ? MonolithEntity::clientTick : MonolithEntity::serverTick);
+    }
+
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING);
@@ -72,9 +80,6 @@ public class MonolithBlock extends BlockWithEntity {
             if (player.isCreativeLevelTwoOp() && player.isSneaking()) {
                 FastTravelServerPacket.sendTeleporterOpScreenPacket((ServerPlayerEntity) player, pos);
             } else {
-                player.playSound(SoundInit.DISCOVERY, 1.0f, 1.0f);
-
-                TeleporterState.get((ServerWorld) world).addVisitor(pos, player.getUuid());
                 FastTravelServerPacket.sendTeleporterScreenPacket((ServerPlayerEntity) player, pos);
             }
         }

@@ -5,6 +5,7 @@
   "yacl3.config.fasttravel:fasttravel.teleportCooldown": "Teleport Cooldown",
   "yacl3.config.fasttravel:fasttravel.chunkExplorationRadius": "Chunk Exploration Radius",
   "yacl3.config.fasttravel:fasttravel.mapFogOverlay": "Map Fog Overlay",
+  "yacl3.config.fasttravel:fasttravel.monolithExploreRadius": "Monolith Explore Radius",
 
   "screen.fasttravel.map": "Map",
   "op_screen.fasttravel.monolith_name": "Monolith Name",

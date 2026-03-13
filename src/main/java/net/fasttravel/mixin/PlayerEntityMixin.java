@@ -83,8 +83,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
                 }
             }
             if (!this.getWorld().isClient() && this.afterTeleportTick == 0) {
-                ((PlayerEntity) (Object) this).getItemCooldownManager()
-                        .set(ItemInit.DIVINITY_SHRAPNEL, FastTravelConfig.CONFIG.instance().teleportCooldown);
+                ((PlayerEntity) (Object) this).getItemCooldownManager().set(ItemInit.DIVINITY_SHRAPNEL, FastTravelConfig.CONFIG.instance().teleportCooldown);
             }
         }
     }
