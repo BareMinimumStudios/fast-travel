@@ -2,7 +2,7 @@ package net.fasttravel.block;
 
 import net.fasttravel.block.entity.MonolithEntity;
 import net.fasttravel.init.BlockInit;
-import net.fasttravel.init.SoundInit;
+import net.fasttravel.init.ItemInit;
 import net.fasttravel.network.FastTravelServerPacket;
 import net.fasttravel.state.TeleporterState;
 import net.minecraft.block.Block;
@@ -18,7 +18,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
@@ -100,7 +99,7 @@ public class MonolithBlock extends BlockWithEntity {
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
         if (!world.isClient() && world instanceof ServerWorld serverWorld) {
             TeleporterState teleporterState = TeleporterState.get(serverWorld);
-            teleporterState.addTeleporter(pos, Text.translatable("block.fasttravel.monolith"), Items.ENDER_PEARL.getDefaultStack());
+            teleporterState.addTeleporter(pos, Text.translatable("block.fasttravel.monolith"), ItemInit.DIVINITY_SHRAPNEL.getDefaultStack());
         }
         super.onBlockAdded(state, world, pos, oldState, notify);
     }

@@ -51,7 +51,7 @@ public class MonolithTopBlock extends Block {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        return world.getBlockState(pos.down()).getBlock().onUse(state, world, pos, player, hand, hit);
+        return world.getBlockState(pos.down()).getBlock().onUse(state, world, pos.down(), player, hand, hit);
     }
 
     @Override

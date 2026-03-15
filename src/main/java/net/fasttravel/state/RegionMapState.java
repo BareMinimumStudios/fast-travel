@@ -14,7 +14,7 @@ public class RegionMapState extends PersistentState {
     private final Map<Long, BitSet> processedChunks = new HashMap<>();
 
     public static long regionKey(int regionX, int regionZ) {
-        return (long) regionX | ((long) regionZ << 32);
+        return ((long) regionX & 0xFFFFFFFFL) | ((long) regionZ << 32);
     }
 
     public static long regionKeyFromChunk(ChunkPos chunk) {

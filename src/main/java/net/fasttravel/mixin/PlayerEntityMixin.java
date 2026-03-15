@@ -41,9 +41,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
         super(entityType, world);
     }
 
-    // writeCustomDataToNbt und readCustomDataFromNbt komplett entfernt —
-    // visitedTeleporters liegt jetzt in TeleporterState (PersistentState) auf dem Server
-
     @Inject(method = "tick", at = @At("TAIL"))
     private void tickMixin(CallbackInfo info) {
         if (this.teleportTick > 0) {

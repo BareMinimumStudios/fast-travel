@@ -23,6 +23,11 @@ public class MapColorGenerator {
         for (int lx = 0; lx < 16; lx++) {
             double previousHeight = 0.0;
 
+            if (northChunk != null) {
+                int northTopY = northChunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE, lx, 15);
+                previousHeight = northTopY + 1;
+            }
+
             for (int lz = 0; lz < 16; lz++) {
                 int worldX = chunkPos.getStartX() + lx;
                 int worldZ = chunkPos.getStartZ() + lz;
@@ -31,6 +36,7 @@ public class MapColorGenerator {
                 MapColor.Brightness brightness = MapColor.Brightness.NORMAL;
 
                 int topY = chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE, lx, lz);
+                int surfaceY = topY;
 
                 BlockPos.Mutable mutablePos = new BlockPos.Mutable(worldX, topY, worldZ);
 
@@ -48,6 +54,8 @@ public class MapColorGenerator {
                         }
                     } while (topY > world.getBottomY() && mapColor == MapColor.CLEAR);
 
+                    double currentHeight = (double) (surfaceY + 1);
+
                     if (mapColor == MapColor.WATER_BLUE) {
                         FluidState fluidState = world.getFluidState(mutablePos);
                         if (!fluidState.isEmpty() && fluidState.isIn(FluidTags.LAVA)) {
@@ -62,30 +70,16 @@ public class MapColorGenerator {
                             brightness = MapColor.Brightness.NORMAL;
                         }
                     } else {
-                        double currentHeight = (double) (topY + 1);
-
-                        double northHeight;
-                        if (lz == 0) {
-                            if (northChunk != null) {
-                                int northTopY = northChunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE, lx, 15);
-                                northHeight = northTopY + 1;
-                            } else {
-                                northHeight = currentHeight;
-                            }
-                        } else {
-                            northHeight = previousHeight;
-                        }
-
-                        if (currentHeight > northHeight) {
+                        if (currentHeight > previousHeight) {
                             brightness = MapColor.Brightness.HIGH;
-                        } else if (currentHeight < northHeight) {
+                        } else if (currentHeight < previousHeight) {
                             brightness = MapColor.Brightness.LOW;
                         } else {
                             brightness = MapColor.Brightness.NORMAL;
                         }
-
-                        previousHeight = currentHeight;
                     }
+
+                    previousHeight = currentHeight;
                 } else {
                     mapColor = MapColor.CLEAR;
                 }

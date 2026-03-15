@@ -107,7 +107,7 @@ public class ClientMapStorage {
     }
 
     public static long regionKey(int regionX, int regionZ) {
-        return (long) regionX | ((long) regionZ << 32);
+        return ((long) regionX & 0xFFFFFFFFL) | ((long) regionZ << 32);
     }
 
     public static int regionX(long key) {

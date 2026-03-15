@@ -43,7 +43,9 @@ public class FastTravelClientPacket {
         ClientPlayNetworking.registerGlobalReceiver(FastTravelServerPacket.AFTER_TELEPORT_PACKET, (client, handler, buf, sender) -> {
             int ticks = buf.readInt();
             client.execute(() -> {
-                if (client.player == null) return;
+                if (client.player == null) {
+                    return;
+                }
                 ((PlayerEntityAccess) client.player).setAfterTeleportTick(ticks);
                 client.player.playSound(SoundInit.AFTER_TELEPORTING, 1.0f, 1.0f);
             });
