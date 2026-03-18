@@ -86,11 +86,18 @@ public class MonolithOpScreen extends Screen {
     }
 
     private void updateDoneButtonState() {
-        if (!this.teleporterNameWidget.getText().isEmpty() && !Registries.ITEM.get(new Identifier(this.teleporterItemStackWidget.getText())).getDefaultStack().isEmpty()) {
-            this.doneButton.active = true;
-        } else {
-            this.doneButton.active = false;
+        String nameText = this.teleporterNameWidget.getText();
+        String itemText = this.teleporterItemStackWidget.getText();
+
+        boolean nameValid = !nameText.isEmpty();
+        boolean itemValid = false;
+
+        if (!itemText.isEmpty()) {
+            Identifier id = Identifier.tryParse(itemText);
+            itemValid = id != null && Registries.ITEM.containsId(id);
         }
+
+        this.doneButton.active = nameValid && itemValid;
     }
 
     private void onDone() {
