@@ -98,6 +98,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
         }
     }
 
+    @Inject(method = "tickNewAi", at = @At("HEAD"), cancellable = true)
+    private void tickNewAiMixin(CallbackInfo info) {
+        if (this.teleportTick > 0 || this.afterTeleportTick > 0) {
+            info.cancel();
+        }
+    }
+
     @Override
     public void startTeleporting(BlockPos pos) {
         this.teleportPos = pos;

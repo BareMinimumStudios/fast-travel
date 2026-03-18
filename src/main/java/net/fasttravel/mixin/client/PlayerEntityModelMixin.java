@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Environment(EnvType.CLIENT)
-@Mixin(value = PlayerEntityModel.class,priority = 1100)
+@Mixin(PlayerEntityModel.class)
 public abstract class PlayerEntityModelMixin<T extends LivingEntity> extends BipedEntityModel<T> {
 
     public PlayerEntityModelMixin(ModelPart root) {
@@ -34,7 +34,6 @@ public abstract class PlayerEntityModelMixin<T extends LivingEntity> extends Bip
 
             this.head.pivotY = 4.0F;
             this.body.pivotY = 4.0F;
-//            this.body.pivotY = 32.0F;
             this.leftArm.pivotY = 5.0F;
             this.rightArm.pivotY = 5.0F;
         }
